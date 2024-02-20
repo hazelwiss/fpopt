@@ -3,7 +3,9 @@ name = "fpopt"
 version = "0.0.1"
 edition = "2021"
 description = "a wrapper around manipulating floating point flags"
-license = "MIT"
+license_file = "LICENSE.md"
+repository = "https://github.com/Kim-Dewelski/fpopt"
+readme = "README.md"
 
 [dependencies]
 libc = "0.2.153"
