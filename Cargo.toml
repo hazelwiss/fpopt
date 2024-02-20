@@ -1,7 +1,9 @@
 [package]
 name = "fpopt"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2021"
+description = "a wrapper around manipulating floating point flags"
+license = "MIT"
 
 [dependencies]
 libc = "0.2.153"
