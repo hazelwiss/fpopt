@@ -1,6 +1,6 @@
 [package]
 name = "fpopt"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 description = "a wrapper around manipulating floating point flags"
 license_file = "LICENSE.md"
