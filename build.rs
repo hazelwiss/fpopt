@@ -17,5 +17,4 @@ fn main() {
             .write_to_file(&binding_path)
             .expect("failed to write binding to file");
     }
-    println!("cargo:rustc-link-lib=binding");
 }
