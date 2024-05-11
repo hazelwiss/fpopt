@@ -66,7 +66,7 @@ macro_rules! flag_ty {
             /// See if the given flags exist.
             #[inline(always)]
             pub fn has(self, other: Self) -> bool {
-                self.0 & other.0 != 0
+                self.0 & other.0 == other.0
             }
 
             /// Return a new set of flags which enbable all mutual flags between `self` and `other`.
