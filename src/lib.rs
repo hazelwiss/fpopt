@@ -130,25 +130,25 @@ flag_ty!(
 );
 
 impl FExcept {
+    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feexceptflag
+    pub fn from_env() -> Result<Self> {
+        let mut excepts = binding::fexcept_t::default();
+        result(unsafe {
+            binding::fegetexceptflag(&mut excepts as *mut _, FExcept::FE_ALL.as_raw() as c_int)
+        })
+        .map(|_| Self(excepts as cfexcpt::Type))
+    }
+
+    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feexceptflag
+    #[inline(always)]
+    pub fn set(self) -> Result<()> {
+        let excepts = self.as_raw() as binding::fexcept_t;
+        result(unsafe { binding::fesetexceptflag(&excepts as *const _, self.as_raw() as c_int) })
+    }
     /// visit: https://en.cppreference.com/w/cpp/numeric/fenv/feclearexcept
     #[inline(always)]
     pub fn clear(self) -> Result<()> {
         result(unsafe { binding::feclearexcept(self.as_raw() as c_int) })
-    }
-
-    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feexceptflag
-    #[inline(always)]
-    pub fn getflag(self) -> Result<Self> {
-        let mut excepts = binding::fexcept_t::default();
-        result(unsafe { binding::fegetexceptflag(&mut excepts as *mut _, self.as_raw() as c_int) })
-            .map(|_| Self(excepts as cfexcpt::Type))
-    }
-
-    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feexceptflag
-    #[inline(always)]
-    pub fn setflag(self) -> Result<()> {
-        let excepts = self.as_raw() as binding::fexcept_t;
-        result(unsafe { binding::fesetexceptflag(&excepts as *const _, self.as_raw() as c_int) })
     }
 
     /// visit: https://en.cppreference.com/w/c/numeric/fenv/feraiseexcept
@@ -167,13 +167,13 @@ impl FExcept {
 impl FRound {
     /// visit: https://en.cppreference.com/w/c/numeric/fenv/feround
     #[inline(always)]
-    pub fn getround() -> Self {
+    pub fn from_env() -> Self {
         Self(unsafe { binding::fegetround() as cfround::Type })
     }
 
     /// visit: https://en.cppreference.com/w/c/numeric/fenv/feround
     #[inline(always)]
-    pub fn setround(self) -> Result<()> {
+    pub fn set(self) -> Result<()> {
         result(unsafe { binding::fesetround(self.as_raw() as c_int) })
     }
 }
@@ -181,13 +181,13 @@ impl FRound {
 /// visit: https://en.cppreference.com/w/c/numeric/fenv/feround
 #[inline(always)]
 pub fn set_rounding_mode(flags: FRound) -> Result<()> {
-    flags.setround()
+    flags.set()
 }
 
 /// visit: https://en.cppreference.com/w/c/numeric/fenv/feround
 #[inline(always)]
 pub fn get_rounding_mode() -> FRound {
-    FRound::getround()
+    FRound::from_env()
 }
 
 /// A wrapper around the floating point environment.
@@ -199,15 +199,9 @@ pub struct FEnv(binding::fenv_t);
 
 impl FEnv {
     #[allow(missing_docs)]
-    pub fn new() -> Result<Self> {
+    pub fn from_env() -> Result<Self> {
         let mut this: Self = unsafe { core::mem::zeroed() };
-        this.get().map(|_| this)
-    }
-
-    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feholdexcept
-    #[inline(always)]
-    pub fn hold(&mut self) -> Result<()> {
-        result(unsafe { binding::feholdexcept(&mut self.0 as *mut _) })
+        result(unsafe { binding::fegetenv(&mut this.0 as *mut _) }).map(|_| this)
     }
 
     /// visit: https://en.cppreference.com/w/c/numeric/fenv/feenv
@@ -216,10 +210,10 @@ impl FEnv {
         result(unsafe { binding::fesetenv(&self.0 as *const _) })
     }
 
-    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feenv
+    /// visit: https://en.cppreference.com/w/c/numeric/fenv/feholdexcept
     #[inline(always)]
-    pub fn get(&mut self) -> Result<()> {
-        result(unsafe { binding::fegetenv(&mut self.0 as *mut _) })
+    pub fn hold(&mut self) -> Result<()> {
+        result(unsafe { binding::feholdexcept(&mut self.0 as *mut _) })
     }
 
     /// visit:

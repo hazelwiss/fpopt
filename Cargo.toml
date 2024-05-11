@@ -1,6 +1,6 @@
 [package]
 name = "fenv-bind"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2021"
 description = "a wrapper around manipulating floating point flags"
 license-file = "LICENSE"
