@@ -1,6 +1,6 @@
 [package]
 name = "fenv-bind"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
 description = "a safe wrapper around fenv.h"
 license-file = "LICENSE"
