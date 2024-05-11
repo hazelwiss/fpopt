@@ -57,6 +57,12 @@ macro_rules! flag_ty {
                 Self(0)
             }
 
+            #[allow(missing_docs)]
+            #[inline(always)]
+            pub fn is_empty(self) -> bool {
+                self.as_raw() == 0
+            }
+
             /// See if the given flags exist.
             #[inline(always)]
             pub fn has(self, other: Self) -> bool {

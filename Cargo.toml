@@ -1,8 +1,8 @@
 [package]
 name = "fenv-bind"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2021"
-description = "a wrapper around manipulating floating point flags"
+description = "a safe wrapper around fenv.h"
 license-file = "LICENSE"
 repository = "https://github.com/Kim-Dewelski/fpopt"
 readme = "README"
