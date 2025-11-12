@@ -5,13 +5,17 @@
 // enforce linking with libc.
 extern crate libc;
 
-#[path = "../binding/binding.rs"]
 #[allow(non_snake_case)]
 #[allow(non_upper_case_globals)]
 #[allow(non_camel_case_types)]
 #[allow(dead_code)]
 #[allow(clippy::useless_transmute)]
 #[allow(missing_docs)]
+#[cfg(target_arch = "loongarch64")]
+#[path = "../binding/binding_loongarch64.rs"]
+mod binding;
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[path = "../binding/binding_x86.rs"]
 mod binding;
 
 use binding::_bindgen_ty_1 as cfexcpt;
@@ -106,6 +110,23 @@ macro_rules! flag_ty {
     };
 }
 
+#[cfg(target_arch = "loongarch64")]
+flag_ty! (
+    /// A wrapper over floating point exception flags.
+    ///
+    /// This type encapsulate the behaviour of manipulating
+    /// the configuration of floating point exceptions without
+    /// needing to deal with the raw API.
+    struct FExcept(cfexcpt::Type);
+    const INVALID = cfexcpt::FE_INVALID;
+    const DIV_BY_ZERO = cfexcpt::FE_DIVBYZERO;
+    const OVERFLOW = cfexcpt::FE_OVERFLOW;
+    const UNDERFLOW = cfexcpt::FE_UNDERFLOW;
+    const INEXACT = cfexcpt::FE_INEXACT;
+    const FE_ALL = binding::FE_ALL_EXCEPT;
+);
+
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 flag_ty! (
     /// A wrapper over floating point exception flags.
     ///
