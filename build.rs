@@ -3,7 +3,10 @@ use std::path::PathBuf;
 use bindgen::EnumVariation;
 
 fn main() {
-    let binding_path = PathBuf::from("binding/binding.rs");
+    #[cfg(target_arch = "loongarch64")]
+    let binding_path = PathBuf::from("binding/binding_loongarch64.rs");
+    #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+    let binding_path = PathBuf::from("binding/binding_x86.rs");
     if !binding_path.exists() {
         let bindings = bindgen::builder()
             .header("fpops.h")
